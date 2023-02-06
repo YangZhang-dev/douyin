@@ -4,7 +4,6 @@ import (
 	"douyin/common/globalkey"
 	"douyin/common/xerr"
 	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/core/logx"
 	"net/http"
 
 	"douyin/app/video/cmd/api/internal/logic/video"
@@ -31,15 +30,10 @@ func PublishVideoHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 		if r.MultipartForm.File["data"] == nil {
-			logx.Error("kong------>", r.MultipartForm.Value["data"])
 			result.HttpResult(r, w, nil, ErrUploadFileNotFound)
 			return
 		}
 		file := r.MultipartForm.File["data"][0]
-		if file == nil || file.Header.Get("Content-Type") != "video/mp4" {
-			result.HttpResult(r, w, nil, errors.Wrapf(ErrUploadFileTypeError, "上传文件格式错误 target:video/mp4, type:%+v", file.Header.Get("Content-type")))
-			return
-		}
 		if file.Size > globalkey.MaxVideoSize {
 			result.HttpResult(r, w, nil, errors.Wrapf(ErrUploadFileOverSize, "上传文件大小超出限制 target:video/mp4, size:%+v", file.Size))
 			return
