@@ -55,24 +55,23 @@ func (l *PublishVideoLogic) PublishVideo(req *types.PublishReq) (resp *types.Pub
 
 	fileName := uuid.New().String() + "-" + strconv.FormatInt(time.Now().Unix(), 10) + "-" + strconv.FormatInt(userId, 10) + "-" + l.file.Filename
 
-	//uploadVideoByOssResp, err := l.svcCtx.FileRpc.UploadVideoByOss(l.ctx, &filepb.UploadVideoByOssReq{
-	//	VideoName: fileName,
-	//	Data:      bytes,
-	//})
-	//if err == nil {
-	//	err := l.saveVideoData(uploadVideoByOssResp.PlayUrl, uploadVideoByOssResp.CoverUrl, req.Title, userId)
-	//	if err != nil {
-	//		return nil, errors.Wrapf(err, "req: %+v", req)
-	//	}
-	//	return &types.PublishResp{
-	//		Status: types.Status{
-	//			StatusCode: xerr.OK,
-	//			StatusMsg:  xerr.MapErrMsg(xerr.OK),
-	//		},
-	//	}, nil
-	//}
-	//logx.Error(err)
-	logx.Errorf("准备本地存储")
+	uploadVideoByOssResp, err := l.svcCtx.FileRpc.UploadVideoByOss(l.ctx, &filepb.UploadVideoByOssReq{
+		VideoName: fileName,
+		Data:      bytes,
+	})
+	if err == nil {
+		err := l.saveVideoData(uploadVideoByOssResp.PlayUrl, uploadVideoByOssResp.CoverUrl, req.Title, userId)
+		if err != nil {
+			return nil, errors.Wrapf(err, "req: %+v", req)
+		}
+		return &types.PublishResp{
+			Status: types.Status{
+				StatusCode: xerr.OK,
+				StatusMsg:  xerr.MapErrMsg(xerr.OK),
+			},
+		}, nil
+	}
+	logx.Error(err)
 	uploadVideoByLocalResp, err := l.svcCtx.FileRpc.UploadVideoByLocal(l.ctx, &filepb.UploadVideoByLocalReq{
 		VideoName: fileName,
 		Data:      bytes,
