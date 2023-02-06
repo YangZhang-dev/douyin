@@ -9,7 +9,6 @@ services:
       MYSQL_ROOT_PASSWORD: root # root密码(修改要同时修改data/mysql/init/init.sql中的密码)
     restart: on-failure
     volumes:
-      - ./data/mysql/data:/var/lib/mysql
       - ./data/mysql/conf:/etc/mysql/conf.d/
       - ./deploy/sql/init:/docker-entrypoint-initdb.d/
     command:
