@@ -53,7 +53,7 @@ func (l *PublishVideoLogic) PublishVideo(req *types.PublishReq) (resp *types.Pub
 		return nil, errors.Wrapf(ErrUploadFileError, "读取文件错误 err:%+v", err)
 	}
 
-	fileName := uuid.New().String() + "-" + strconv.FormatInt(time.Now().Unix(), 10) + "-" + strconv.FormatInt(userId, 10) + "-" + l.file.Filename
+	fileName := uuid.New().String() + "-" + strconv.FormatInt(time.Now().Unix(), 10) + "-" + strconv.FormatInt(userId, 10) + ".mp4"
 
 	uploadVideoByOssResp, err := l.svcCtx.FileRpc.UploadVideoByOss(l.ctx, &filepb.UploadVideoByOssReq{
 		VideoName: fileName,
