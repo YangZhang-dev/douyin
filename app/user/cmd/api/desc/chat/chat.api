@@ -36,3 +36,17 @@ type (
         Message []Message `json:"message_list,omitempty"`
     }
 )
+@server(
+    prefix : douyin/message
+    group : chat
+    middleware : JwtAuthMiddleWare
+)
+service userApi {
+    @doc "发送消息"
+    @handler SendMessage
+    post /action (SendMessageReq) returns (SendMessageResp)
+
+    @doc "历史消息"
+    @handler HistoryMessage
+    get /chat (HistoryMessageReq) returns (HistoryMessageResp)
+}

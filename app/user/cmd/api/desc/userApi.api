@@ -46,7 +46,7 @@ service userApi {
 service userApi {
     @doc "关注或取消关注操作"
     @handler FollowOrUnFollow
-    get /action (FollowOrUnfollowReq) returns (FollowOrUnfollowResp)
+    post /action (FollowOrUnfollowReq) returns (FollowOrUnfollowResp)
 
     @doc "好友列表"
     @handler FriendsList
@@ -66,19 +66,4 @@ service userApi {
     @doc "粉丝列表"
     @handler FansList
     get /follower/list (FansListReq) returns (FansListResp)
-}
-
-@server(
-    prefix : douyin/message
-    group : chat
-    middleware : JwtAuthMiddleWare
-)
-service userApi {
-    @doc "发送消息"
-    @handler SendMessage
-    post /action (SendMessageReq) returns (SendMessageResp)
-
-    @doc "历史消息"
-    @handler HistoryMessage
-    get /chat (HistoryMessageReq) returns (HistoryMessageResp)
 }
