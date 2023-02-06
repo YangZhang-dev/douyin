@@ -1,0 +1,38 @@
+syntax = "v1"
+
+info(
+    title: "聊天实例"
+    desc: "聊天实例"
+    author: "张扬"
+    email: "2803436425@qq.com"
+)
+import "user/user.api"
+
+type Message {
+    Id int64 `json:"id"`
+    Content string `json:"content"`
+    CreateTime string `json:"create_time"`
+}
+
+
+type (
+    SendMessageReq {
+        Token string `form:"token" validate:"required"`
+        ToUserId int64 `form:"to_user_id" validate:"required,gte=0"`
+        ActionType int64 `form:"action_type" validate:"required,gte=1,lte=2"`
+        Content string `form:"content" validate:"required"`
+    }
+    SendMessageResp {
+        Status
+    }
+)
+type (
+    HistoryMessageReq {
+        Token string `form:"token" validate:"required"`
+        ToUserId int64 `form:"to_user_id" validate:"required,gte=0"`
+    }
+    HistoryMessageResp {
+        Status
+        Message []Message `json:"message_list,omitempty"`
+    }
+)

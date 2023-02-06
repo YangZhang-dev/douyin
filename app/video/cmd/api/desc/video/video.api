@@ -1,0 +1,110 @@
+syntax = "v1"
+
+info(
+    title: "视频实例"
+    desc: "视频实例"
+    author: "张扬"
+    email: "2803436425@qq.com"
+)
+
+type User {
+    Id int64 `json:"id"`
+    Username string `json:"name"`
+    FollowCount int64 `json:"follow_count"`
+    FollowerCount int64 `json:"follower_count"`
+    IsFollow bool `json:"is_follow"`
+}
+
+type Status {
+    StatusCode uint32 `json:"status_code"`
+    StatusMsg string `json:"status_msg"`
+}
+
+
+// 视频实体
+type Video {
+    Id int64 `json:"id"`
+    Author User `json:"author""`
+    PlayUrl string `json:"play_url"`
+    CoverUrl string `json:"cover_url"`
+    FavoriteCount int64 `json:"favorite_count"`
+    CommentCount int64 `json:"comment_count"`
+    IsFavorite bool `json:"is_favorite"`
+    Title string `json:"title"`
+}
+
+
+// 获取视频流,不限制登录状态，返回按投稿时间倒序的视频列表，视频数由服务端控制，单次最多30个
+type (
+    // 获取视频流请求体
+    FeedReq {
+        // 限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
+        LastTime string `form:"last_time,optional"`
+        token string `form:"token,optional"`
+    }
+        // 获取视频流返回体
+    FeedResp {
+        Status
+        // 本次返回的视频中，发布最早的时间，作为下次请求时的latest_time
+        NextTime int64 `json:"next_time,omitempty"`
+        VideoList []Video `json:"video_list,omitempty"`
+    }
+)
+// 投稿列表
+type (
+    // 投稿列表请求体
+    PublishListReq {
+        UserId int64 `form:"user_id" validate:"required,gte=0"`
+        token string `form:"token,optional"`
+    }
+        // 投稿列表返回体
+    PublishListResp {
+        Status
+        VideoList []Video `json:"video_list,omitempty"`
+    }
+)
+// 发布视频
+type (
+    // 发布视频请求体
+    PublishReq {
+        title string `form:"title" validate:"required,max=100,min=1"`
+        token string `form:"token" validate:"required"`
+    }
+        // 发布视频返回体
+    PublishResp {
+        Status
+    }
+)
+
+@server(
+    prefix : douyin/feed
+    group : video
+    middleware : OptionalJWTMiddleware
+)
+service videoApi {
+    @doc "获取视频流"
+    @handler Feed
+    get / (FeedReq) returns (FeedResp)
+}
+
+
+@server(
+    prefix : douyin/publish
+    group : video
+    middleware : OptionalJWTMiddleware
+)
+service videoApi {
+    @doc "获取发布视频列表"
+    @handler PublishList
+    get /list (PublishListReq) returns (PublishListResp)
+}
+@server(
+    prefix : douyin/publish
+    group : video
+    middleware : ParseFormMiddleware
+)
+service videoApi {
+    @doc "发布视频"
+    @handler PublishVideo
+    post /action (PublishReq) returns (PublishResp)
+}

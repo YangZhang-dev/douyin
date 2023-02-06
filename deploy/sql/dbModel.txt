@@ -1,0 +1,78 @@
+
+Table douyin_user."chat" {
+  "id" int [pk, not null, increment, note: '娑堟伅id']
+  "user_id" int [not null, note: '发送用户id' ,ref:> douyin_user.user.id]
+  "to_user_id" int [not null, note: '接收消息用户id',ref:> douyin_user.user.id]
+  "content" varchar(200) [not null]
+  "create_time" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: '鍒涘缓鏃堕棿']
+  "update_time" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: '更新时间']
+
+Indexes {
+  (user_id, to_user_id) [name: "idx_chat"]
+}
+}
+
+Table douyin_user."follow" {
+  "id" int [pk, not null, increment, note: '鍏虫敞id']
+  "user_id" int [not null, note: '关注用户id',ref:> douyin_user.user.id]
+  "to_user_id" int [not null, note: '被关注用户id',ref:> douyin_user.user.id]
+  "create_time" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: '鍒涘缓鏃堕棿']
+  "update_time" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: '更新时间']
+  "is_friends" bit [not null, default: 0, note: '0代表没有互相关注，1代表互相关注']
+Indexes {
+  user_id [type: btree, name: "idx_user_id"]
+  to_user_id [name: "idx_to_user_id"]
+}
+}
+
+Table douyin_user."user" {
+  "id" int [pk, not null, increment, note: ' 用户id']
+  "username" varchar(32) [not null, note: '用户名']
+  "password" varchar(100) [not null, note: '密码']
+  "follow_count" int [not null, default: "0", note: '关注数量']
+  "follower_count" int [not null, default: "0", note: '粉丝数量']
+  "create_time" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: '鍒涘缓鏃堕棿']
+  "update_time" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: '更新时间']
+}
+
+Table douyin_video."comment" {
+  "id" int [pk, not null, increment]
+  "user_id" int [not null, note: '评论用户id',ref:> douyin_user.user.id]
+  "video_id" int [not null, note: '被评论的视频id',ref:> douyin_video.video.id]
+  "content" varchar(200) [not null, note: '评论内容']
+  "create_time" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: '鍒涘缓鏃堕棿']
+  "update_time" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: '更新时间']
+
+Indexes {
+  video_id [name: "idx_video_id"]
+}
+}
+
+Table douyin_video."favorite_video" {
+  "id" int [pk, not null, increment, note: '点赞id']
+  "user_id" int [not null, note: '点赞用户id',ref:> douyin_user.user.id]
+  "video_id" int [not null, note: '视频id',ref:> douyin_video.video.id]
+  "create_time" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: '鍒涘缓鏃堕棿']
+  "update_time" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: '更新时间']
+
+Indexes {
+  user_id [name: "idx_user_id"]
+}
+}
+
+Table douyin_video."video" {
+  "id" int [pk, not null, increment, note: '视频id']
+  "user_id" int [not null, note: '发布作者id',ref:> douyin_user.user.id]
+  "title" varchar(32) [not null, note: '视频标题']
+  "play_url" varchar(32) [not null, note: '视频播放地址']
+  "cover_url" varchar(32) [not null, note: '封面地址']
+  "favorite_count" int [not null, default: "0", note: '点赞数量']
+  "comment_count" int [not null, default: "0", note: '评论数量']
+  "create_time" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: '鍒涘缓鏃堕棿']
+  "update_time" timestamp [not null, default: `CURRENT_TIMESTAMP`, note: '更新时间']
+
+Indexes {
+  user_id [type: btree, name: "idx_user_id"]
+  create_time [type: btree, name: "idx_create_time"]
+}
+}

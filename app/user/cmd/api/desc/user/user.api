@@ -1,0 +1,53 @@
+syntax = "v1"
+
+info(
+    title: "用户实例"
+    desc: "用户实例"
+    author: "张扬"
+    email: "2803436425@qq.com"
+)
+type User {
+    Id int64 `json:"id"`
+    Username string `json:"name"`
+    FollowCount int64 `json:"follow_count"`
+    FollowerCount int64 `json:"follower_count"`
+    IsFollow bool `json:"is_follow"`
+}
+
+type Status {
+    StatusCode uint32 `json:"status_code"`
+    StatusMsg string `json:"status_msg"`
+}
+
+type (
+    RegisterReq {
+        Username string `form:"username" validate:"required,max=32,min=1"`
+        Password string `form:"password" validate:"required,max=32,min=1"`
+    }
+    RegisterResp {
+        Status
+        UserId int64 `json:"user_id,omitempty"`
+        token string `json:"token,omitempty"`
+    }
+)
+type (
+    LoginReq {
+        Username string `form:"username" validate:"required,max=32,min=1"`
+        Password string `form:"password" validate:"required,max=32,min=1"`
+    }
+    LoginResp {
+        Status
+        UserId int64 `json:"user_id,omitempty"`
+        token string `json:"token,omitempty"`
+    }
+)
+type (
+    UserInfoReq {
+        UserId int64 `form:"user_id" validate:"required,gte=0"`
+        token string `form:"token,optional"`
+    }
+    UserInfoResp {
+        Status
+        User User `json:"user,omitempty"`
+    }
+)

@@ -1,0 +1,153 @@
+version: '3'
+
+services:
+  #MySQL
+  douyin-mysql:
+    image: mysql:8.0.31
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: root # root密码(修改要同时修改data/mysql/init/init.sql中的密码)
+    restart: on-failure
+    volumes:
+      - ./data/mysql/data:/var/lib/mysql
+      - ./data/mysql/conf:/etc/mysql/conf.d/
+      - ./deploy/sql/init:/docker-entrypoint-initdb.d/
+    command:
+      #       将mysql8.0默认密码策略 修改为 原先 策略 (mysql8.0对其默认策略做了更改 会导致密码无法匹配)
+      --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4  --collation-server=utf8mb4_general_ci --explicit_defaults_for_timestamp=true --lower_case_table_names=1
+    networks:
+      - douyin-net
+
+  #Redis
+  douyin-redis:
+    image: redis
+    command: redis-server --requirepass root # requirepass后为密码(可修改)
+    volumes:
+      - ./data/redis:/data
+    networks:
+      - douyin-net
+
+  user-api:
+    restart: always
+    build:
+      context: ./
+      dockerfile: app/user/cmd/api/Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./data/logs/user/api/logs/:/app/logs
+      - ./app/user/cmd/api/etc:/app/etc
+    depends_on:
+      - douyin-mysql
+      - douyin-redis
+      - user-rpc
+    networks:
+      - douyin-net
+
+  video-api:
+    restart: always
+    build:
+      context: ./
+      dockerfile: app/video/cmd/api/Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./data/logs/video/api/logs/:/app/logs
+      - ./app/video/cmd/api/etc:/app/etc
+    depends_on:
+      - douyin-mysql
+      - douyin-redis
+      - user-rpc
+      - video-rpc
+      - file-rpc
+    networks:
+      - douyin-net
+
+  file-api:
+    restart: always
+    build:
+      context: ./
+      dockerfile: app/file/cmd/api/Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./data/static:/app/static
+    depends_on:
+      - douyin-mysql
+      - douyin-redis
+    networks:
+      - douyin-net
+
+  user-rpc:
+    restart: always
+    build:
+      context: ./
+      dockerfile: app/user/cmd/rpc/Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./data/logs/user/rpc/logs/:/app/logs
+      - ./app/user/cmd/rpc/etc:/app/etc
+    depends_on:
+      - douyin-mysql
+      - douyin-redis
+    networks:
+      - douyin-net
+
+  video-rpc:
+    restart: always
+    build:
+      context: ./
+      dockerfile: app/video/cmd/rpc/Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./data/logs/video/rpc/logs/:/app/logs
+      - ./app/video/cmd/rpc/etc:/app/etc
+    depends_on:
+      - douyin-mysql
+      - douyin-redis
+    networks:
+      - douyin-net
+
+  file-rpc:
+    restart: always
+    build:
+      context: ./
+      dockerfile: app/file/cmd/rpc/Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ./data/static:/app/static
+      - ./data/logs/file/rpc/logs/:/app/logs
+      - ./app/file/cmd/rpc/etc:/app/etc
+    depends_on:
+      - douyin-mysql
+      - douyin-redis
+    networks:
+      - douyin-net
+
+  nginx-gateway:
+    image: nginx:1.21.5
+    restart: always
+    privileged: true
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - "8888:9999"
+    volumes:
+      - ./deploy/nginx/conf.d:/etc/nginx/conf.d
+      - ./data/nginx/log:/var/log/nginx
+    networks:
+      - douyin-net
+    depends_on:
+      - user-api
+      - user-rpc
+      - video-api
+      - video-rpc
+      - file-api
+      - file-rpc
+
+networks:
+  douyin-net:
+    driver: bridge

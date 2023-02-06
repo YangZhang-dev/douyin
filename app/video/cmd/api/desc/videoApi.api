@@ -1,0 +1,13 @@
+syntax = "v1"
+
+info(
+    title: "视频中心服务"
+    desc: "视频中心服务"
+    author: "张扬"
+    email: "2803436425@qq.com"
+)
+import (
+    "video/video.api"
+    "favorite/favorite.api"
+    "comment/comment.api"
+)

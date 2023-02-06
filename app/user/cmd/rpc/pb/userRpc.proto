@@ -1,0 +1,181 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+
+//--------------------------------follow--------------------------------
+
+// 用户实体
+message User {
+  int64 id = 1;
+  string username = 2;
+  string password = 3;
+  int64 followCount = 4;
+  int64 followerCount = 5;
+  int64 createTime = 6;
+  bool isFollow = 7;
+}
+// 用户注册请求体
+message RegisterReq{
+  string username = 1;
+  string password = 2;
+}
+// 用户注册返回体
+message RegisterResp{
+  int64 userId = 1;
+  string token = 2;
+}
+// 用户登录请求体
+message LoginReq{
+  string username = 1;
+  string password = 2;
+}
+// 用户登录返回体
+message LoginResp{
+  int64 userId = 1;
+  string token = 2;
+}
+// 批量获取用户请求体
+message GetUserListByIdsReq {
+  optional int64 userId = 1;
+  repeated int64 ids = 2;
+}
+// 批量获取用户返回体
+message GetUserListByIdsResp {
+  repeated User users = 1;
+}
+// 获取Token请求体
+message GenerateTokenReq {
+  int64 userId = 1;
+}
+// 获取Token返回体
+message GenerateTokenResp {
+  string token = 1;
+}
+
+//--------------------------------follow--------------------------------
+
+// 关注实体
+message Follow {
+  int64 id = 1;
+  int64 userId = 2;
+  int64 toUserId = 3;
+  bytes isFriend = 4;
+}
+// 获取关注信息请求体
+message GetFollowInfoReq{
+  int64 userId = 1;
+  int64 toUserId = 2;
+}
+// 获取关注信息返回体
+message GetFollowInfoResp{
+  bool isFollow = 1;
+  Follow follow = 2;
+}
+// 获取关注列表请求体
+message GetFollowListByUserIdReq{
+  int64 userId = 1;
+  optional int64 curUserId = 2;
+}
+// 获取关注列表返回体
+message GetFollowListByUserIdResp{
+  repeated User users = 1;
+}
+// 获取粉丝列表请求体
+message GetFansListByUserIdReq{
+  int64 userId = 1;
+  optional int64 curUserId = 2;
+}
+// 获取粉丝列表返回体
+message GetFansListByUserIdResp{
+  repeated User users = 1;
+}
+// 关注请求体
+message FollowReq{
+  int64 userId = 1;
+  int64 toUserId = 2;
+}
+// 关注返回体
+message FollowResp{
+}
+// 取消关注请求体
+message UnFollowReq{
+  int64 userId = 1;
+  int64 toUserId = 2;
+}
+// 取消关注返回体
+message UnFollowResp{
+}
+// 好友列表请求体
+message GetFriendsListReq{
+  int64 userId = 1;
+  optional int64 curUserId = 2;
+}
+// 好友列表返回体
+message GetFriendsListResp{
+  repeated User user = 1;
+}
+// 消息实例
+message Message{
+  int64 id = 1;
+  string content = 2;
+  string createTime = 3;
+}
+
+// 发送消息请求体
+message SendMessageReq{
+  int64 userId = 1;
+  int64 toUserId = 2;
+  string content = 3;
+}
+// 发送消息返回体
+message SendMessageResp{
+}
+// 获取历史消息请求体
+message GetHistoryMessageReq{
+  int64 userId = 1;
+  int64 toUserId = 2;
+}
+// 获取历史消息返回体
+message GetHistoryMessageResp{
+  repeated Message messageList = 1;
+}
+
+// ------------------------------------ 
+// Rpc Func
+// ------------------------------------ 
+
+service userRpc{
+
+  //--------------------------------user--------------------------------
+  // 用户注册
+  rpc Register(RegisterReq) returns(RegisterResp);
+  // 用户登录
+  rpc Login(LoginReq) returns(LoginResp);
+  // 批量获取用户信息
+  rpc GetUserListByIds(GetUserListByIdsReq) returns (GetUserListByIdsResp);
+  // 获取Token
+  rpc GenerateToken(GenerateTokenReq) returns(GenerateTokenResp);
+
+  //--------------------------------follow--------------------------------
+  //  获取关注信息
+  rpc GetFollowInfo(GetFollowInfoReq) returns(GetFollowInfoResp);
+  // 获取关注列表
+  rpc GetFollowListByUserId(GetFollowListByUserIdReq) returns(GetFollowListByUserIdResp);
+  // 获取粉丝列表
+  rpc GetFansListByUserId(GetFansListByUserIdReq) returns(GetFansListByUserIdResp);
+  // 关注
+  rpc Follow(FollowReq) returns(FollowResp);
+  // 取消关注
+  rpc UnFollow(UnFollowReq) returns(UnFollowResp);
+  // 获取好友列表
+  rpc GetFriendsList(GetFriendsListReq) returns(GetFriendsListResp);
+
+  //--------------------------------chat--------------------------------
+  // 发送消息
+  rpc SendMessage(SendMessageReq) returns(SendMessageResp);
+  // 获取历史消息
+  rpc GetHistoryMessage(GetHistoryMessageReq) returns(GetHistoryMessageResp);
+}

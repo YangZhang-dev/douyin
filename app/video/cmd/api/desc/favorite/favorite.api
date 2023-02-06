@@ -1,0 +1,58 @@
+syntax = "v1"
+
+info(
+    title: "视频点赞实例"
+    desc: "视频点赞实例"
+    author: "张扬"
+    email: "2803436425@qq.com"
+)
+import "video/video.api"
+
+
+// 点赞或取消点赞操作
+type (
+    // 点赞或取消点赞操作请求体
+    FavoriteOrUnfavoriteReq {
+        Token string `form:"token" validate:"required"`
+        VideoId int64 `form:"video_id" validate:"required,gte=0"`
+        ActionType int64 `form:"action_type" validate:"required,gte=1,lte=2"`
+    }
+        // 点赞或取消点赞操作返回体
+    FavoriteOrUnfavoriteResp {
+        Status
+    }
+)
+// 点赞视频列表
+type (
+    // 点赞视频列表请求体
+    FavoriteVideosListReq {
+        UserId int64 `form:"user_id" validate:"required,gte=0"`
+        token string `form:"token,optional"`
+    }
+        // 点赞视频列表返回体
+    FavoriteVideosListResp {
+        Status
+        VideoList []Video `json:"video_list,omitempty"`
+    }
+)
+@server(
+    prefix : douyin/favorite
+    group : favorite
+    middleware : JwtAuthMiddleWare
+)
+service videoApi {
+    @doc "点赞或取消点赞操作"
+    @handler FavoriteOrUnfavorite
+    post /action (FavoriteOrUnfavoriteReq) returns (FavoriteOrUnfavoriteResp)
+}
+
+@server(
+    prefix : douyin/favorite
+    group : favorite
+    middleware : OptionalJWTMiddleware
+)
+service videoApi {
+    @doc "获取点赞视频"
+    @handler FavoriteVideosList
+    get /list (FavoriteVideosListReq) returns (FavoriteVideosListResp)
+}

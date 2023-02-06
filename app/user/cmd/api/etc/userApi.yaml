@@ -1,0 +1,20 @@
+Name: userApi
+Host: 0.0.0.0
+Port: 8080
+Mode: pro
+
+#Log
+Log:
+  ServiceName: userApi
+  Encoding: json
+  Level: severe
+  Mode: file
+  Path: logs/
+
+UserRpcConf:
+  Endpoints:
+    - user-rpc:9090
+
+#jwtAuth
+JwtAuth:
+  AccessSecret:

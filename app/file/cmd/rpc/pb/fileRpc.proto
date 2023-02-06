@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+// 上传视频到OSS请求体
+message UploadVideoByOssReq{
+  string videoName = 1;
+  bytes data = 2;
+}
+// 上传视频到OSS返回体
+message UploadVideoByOssResp{
+  string playUrl = 1;
+  string coverUrl = 2;
+}
+// 上传视频到本地请求体
+message UploadVideoByLocalReq{
+  string videoName = 1;
+  bytes data = 2;
+}
+// 上传视频到本地返回体
+message UploadVideoByLocalResp{
+  string playUrl = 1;
+  string coverUrl = 2;
+}
+service fileRpc{
+  // 上传视频到OSS
+  rpc UploadVideoByOss(UploadVideoByOssReq) returns (UploadVideoByOssResp);
+  // 上传视频到本地
+  rpc UploadVideoByLocal(UploadVideoByLocalReq) returns(UploadVideoByLocalResp);
+}

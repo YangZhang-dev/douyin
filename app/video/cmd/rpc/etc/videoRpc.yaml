@@ -1,0 +1,20 @@
+Name: videoRpc
+ListenOn: 0.0.0.0:9091
+Mode: pro
+Timeout: 10000
+
+
+#Log
+Log:
+  ServiceName: videoRpc
+  Encoding: json
+  Level: severe
+  Mode: file
+  Path: logs/
+
+# DB,Cache
+DB:
+  DataSource: root:root@tcp(douyin-mysql:3306)/douyin_video?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+Cache:
+  - Host: douyin-redis:6379
+    Pass: root

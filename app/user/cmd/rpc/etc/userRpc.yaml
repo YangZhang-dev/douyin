@@ -1,0 +1,23 @@
+Name: userRpc
+ListenOn: 0.0.0.0:9090
+Mode: pro
+
+#Log
+Log:
+  ServiceName: userRpc
+  Encoding: json
+  Level: severe
+  Mode: file
+  Path: logs/
+
+# DB,Cache
+DB:
+  DataSource: root:root@tcp(douyin-mysql:3306)/douyin_user?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+Cache:
+  - Host: douyin-redis:6379
+    Pass: root
+
+#jwtAuth
+JwtAuth:
+  AccessSecret:
+  AccessExpire: 86400

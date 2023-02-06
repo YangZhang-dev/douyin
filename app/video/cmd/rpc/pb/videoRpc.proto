@@ -1,0 +1,155 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+
+// 视频实体
+message Video {
+  int64 Id = 1;
+  int64 userId = 2;
+  string playUrl = 3;
+  string coverUrl = 4;
+  int64 favoriteCount = 5;
+  int64 commentCount = 6;
+  bool isFavorite = 7;
+  string title = 8;
+}
+
+// 发布视频请求体
+message UploadVideoReq{
+  string title = 1;
+  int64 userId = 2;
+  string playUrl = 3;
+  string coverUrl = 4;
+}
+// 发布视频返回体
+message UploadVideoResp{
+}
+// 视频流请求体
+message FeedReq{
+  optional int64 userId = 1;
+  optional int64 lastTime = 2;
+}
+// 视频流返回体
+message FeedResp{
+  int64 nextTime = 1;
+  repeated Video videoList = 2;
+}
+
+// 获取点赞情况请求体
+message GetFavoriteInfoReq{
+  int64 userId = 1;
+  int64 videoId = 2;
+}
+// 获取点赞情况请求体
+message GetFavoriteInfoResp{
+  bool isFavorite = 1;
+}
+
+// 发布列表请求体
+message PublishListReq{
+  int64 userId = 1;
+}
+// 发布列表返回体
+message PublishListResp{
+  repeated Video videoList = 1;
+}
+
+// 点赞请求体
+message FavoriteReq{
+  int64 userId = 1;
+  int64 videoId = 2;
+}
+// 点赞返回体
+message FavoriteResp{
+}
+// 取消点赞请求体
+message UnFavoriteReq{
+  int64 userId = 1;
+  int64 videoId = 2;
+}
+// 取消点赞返回体
+message UnFavoriteResp{
+}
+
+// 批量获取视频请求体
+message GetVideoListByIdsReq {
+  optional int64 userId = 1;
+  repeated int64 ids = 2;
+}
+// 批量获取视频返回体
+message GetVideoListByIdsResp {
+  repeated Video videoList = 1;
+}
+
+// 获取点赞列表请求体
+message FavoriteListReq{
+  int64 userId = 1;
+  optional int64 curUserId = 2;
+}
+// 获取点赞列表返回体
+message FavoriteListResp{
+  repeated Video videoList = 1;
+}
+
+// 评论实体
+message Comment{
+  int64 id = 1;
+  int64 userId = 2;
+  string content = 3;
+  string createTime = 4;
+}
+
+// 发布评论请求体
+message PublishCommentReq{
+  int64 videoId = 1;
+  string content = 2;
+  int64 userId = 3;
+}
+// 发布评论返回体
+message PublishCommentResp{
+  Comment comment = 1;
+}
+// 删除评论请求体
+message DeleteCommentReq{
+  int64 commentId = 1;
+  int64 videoId = 2;
+}
+// 删除评论返回体
+message DeleteCommentResp{
+}
+
+// 获取视频评论列表请求体
+message GetCommentListReq{
+  int64 videoId = 1;
+}
+// 获取视频评论列表返回体
+message GetCommentListResp{
+  repeated Comment commentList = 1;
+}
+service videoRpc{
+  // 发布视频
+  rpc UploadVideo(UploadVideoReq) returns(UploadVideoResp);
+  // 视频流
+  rpc Feed(FeedReq) returns(FeedResp);
+  //  获取点赞情况
+  rpc GetFavoriteInfo(GetFavoriteInfoReq) returns(GetFavoriteInfoResp);
+  // 获取发布列表
+  rpc PublishList(PublishListReq) returns(PublishListResp);
+  //  点赞
+  rpc Favorite(FavoriteReq) returns(FavoriteResp);
+  //  取消点赞
+  rpc UnFavorite(UnFavoriteReq) returns(UnFavoriteResp);
+  // 批量获取视频
+  rpc  GetVideoListByIds(GetVideoListByIdsReq) returns(GetVideoListByIdsResp);
+  // 获取点赞列表
+  rpc FavoriteList(FavoriteListReq) returns(FavoriteListResp);
+  // 发布评论
+  rpc PublishComment(PublishCommentReq) returns(PublishCommentResp);
+  // 删除评论
+  rpc DeleteComment(DeleteCommentReq) returns(DeleteCommentResp);
+  // 获取视频评论
+  rpc GetCommentList(GetCommentListReq) returns(GetCommentListResp);
+}

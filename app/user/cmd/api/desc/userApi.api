@@ -1,0 +1,84 @@
+syntax = "v1"
+
+info(
+    title: "用户中心服务"
+    desc: "用户中心服务"
+    author: "张扬"
+    email: "2803436425@qq.com"
+)
+
+import (
+    "user/user.api"
+    "follow/follow.api"
+    "chat/chat.api"
+)
+
+@server(
+    prefix : douyin/user
+    group : user
+)
+service userApi {
+    @doc "用户注册"
+    @handler register
+    post /register (RegisterReq) returns (RegisterResp)
+
+    @doc "用户登录"
+    @handler login
+    post /login (LoginReq) returns (LoginResp)
+}
+
+@server(
+    prefix : douyin/user
+    group : user
+    middleware : OptionalJWTMiddleware
+)
+service userApi {
+    @doc "获取用户信息"
+    @handler getUserInfo
+    get / (UserInfoReq) returns (UserInfoResp)
+}
+
+@server(
+    prefix : douyin/relation
+    group : follow
+    middleware : JwtAuthMiddleWare
+)
+service userApi {
+    @doc "关注或取消关注操作"
+    @handler FollowOrUnFollow
+    get /action (FollowOrUnfollowReq) returns (FollowOrUnfollowResp)
+
+    @doc "好友列表"
+    @handler FriendsList
+    get /friend/list (FriendsListReq) returns (FriendsListResp)
+}
+
+@server(
+    prefix : douyin/relation
+    group : follow
+    middleware : OptionalJWTMiddleware
+)
+service userApi {
+    @doc "关注列表"
+    @handler FollowList
+    get /follow/list (FollowListReq) returns (FollowListResp)
+
+    @doc "粉丝列表"
+    @handler FansList
+    get /follower/list (FansListReq) returns (FansListResp)
+}
+
+@server(
+    prefix : douyin/message
+    group : chat
+    middleware : JwtAuthMiddleWare
+)
+service userApi {
+    @doc "发送消息"
+    @handler SendMessage
+    post /action (SendMessageReq) returns (SendMessageResp)
+
+    @doc "历史消息"
+    @handler HistoryMessage
+    get /chat (HistoryMessageReq) returns (HistoryMessageResp)
+}

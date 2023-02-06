@@ -1,0 +1,20 @@
+Name: fileRpc
+ListenOn: 0.0.0.0:9092
+Mode: pro
+Timeout: 10000
+
+#Log
+Log:
+  ServiceName: fileRpc
+  Encoding: json
+  level: severe
+  Mode: file
+  Path: logs/
+
+#Oss
+Xoss:
+  Endpoint:
+  AccessKeyId:
+  AccessKeySecret:
+  BucketName:
+  PlayPath:

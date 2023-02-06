@@ -1,0 +1,68 @@
+syntax = "v1"
+
+info(
+    title: "视频评论实例"
+    desc: "视频评论实例"
+    author: "张扬"
+    email: "2803436425@qq.com"
+)
+import "video/video.api"
+
+// 评论实体
+type Comment {
+    Id int64 `json:"id"`
+    User User `json:"user""`
+    Content string `json:"content"`
+    CreateDate string `json:"create_date"`
+}
+
+// 评论或取消评论操作
+type (
+    // 评论或取消评论操作请求体
+    CommentOrDelCommentReq {
+        Token string `form:"token" validate:"required"`
+        VideoId int64 `form:"video_id" validate:"required,gte=0"`
+        ActionType int64 `form:"action_type" validate:"required,gte=1,lte=2"`
+        CommentText string `form:"comment_text,optional"`
+        CommentId int64 `form:"comment_id,optional"`
+    }
+        // 评论或取消评论操作返回体
+    CommentOrDelCommentResp {
+        Status
+        Comment Comment `json:"comment,omitempty"`
+    }
+)
+// 获取视频评论操作
+type (
+    // 获取视频评论操作请求体
+    CommentsListReq {
+        Token string `form:"token""`
+        VideoId int64 `form:"video_id" validate:"required,gte=0"`
+    }
+        // 获取视频评论操作返回体
+    CommentsListResp {
+        Status
+        CommentsList []Comment `json:"comment_list,omitempty"`
+    }
+)
+@server(
+    prefix : douyin/comment
+    group : comment
+    middleware : JwtAuthMiddleWare
+)
+service videoApi {
+    @doc "评论操作"
+    @handler CommentOrDelComment
+    post /action (CommentOrDelCommentReq) returns (CommentOrDelCommentResp)
+}
+
+@server(
+    prefix : douyin/comment
+    group : comment
+    middleware : OptionalJWTMiddleware
+)
+service videoApi {
+    @doc "获取视频评论"
+    @handler CommentsList
+    get /list (CommentsListReq) returns (CommentsListResp)
+}

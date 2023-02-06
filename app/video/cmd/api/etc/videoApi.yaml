@@ -1,0 +1,30 @@
+Name: videoApi
+Host: 0.0.0.0
+Port: 8081
+Mode: pro
+TimeOut: 10000 # 10s
+MaxBytes: 33554432 # 32M
+
+#Log
+Log:
+  ServiceName: videoApi
+  Encoding: json
+  level: severe
+  Mode: file
+  Path: logs/
+
+FileRpcConf:
+  Endpoints:
+    - file-rpc:9092
+
+VideoRpcConf:
+  Endpoints:
+    - video-rpc:9091
+
+UserRpcConf:
+  Endpoints:
+    - user-rpc:9090
+
+#jwtAuth
+JwtAuth:
+  AccessSecret:

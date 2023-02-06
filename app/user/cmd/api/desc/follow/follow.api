@@ -1,0 +1,50 @@
+syntax = "v1"
+
+info(
+    title: "用户实例"
+    desc: "用户实例"
+    author: "张扬"
+    email: "2803436425@qq.com"
+)
+import "user/user.api"
+
+type (
+    FollowOrUnfollowReq {
+        Token string `form:"token" validate:"required"`
+        ToUserId int64 `form:"to_user_id" validate:"required,gte=0"`
+        ActionType int64 `form:"action_type" validate:"required,gte=1,lte=2"`
+    }
+    FollowOrUnfollowResp {
+        Status
+    }
+)
+type (
+    FollowListReq {
+        Token string `form:"token" validate:"required"`
+        UserId int64 `form:"user_id" validate:"required,gte=0"`
+    }
+    FollowListResp {
+        Status
+        UserList []User `json:"user_list,omitempty"`
+    }
+)
+type (
+    FansListReq {
+        Token string `form:"token" validate:"required"`
+        UserId int64 `form:"user_id" validate:"required,gte=0"`
+    }
+    FansListResp {
+        Status
+        UserList []User `json:"user_list,omitempty"`
+    }
+)
+type (
+    FriendsListReq {
+        Token string `form:"token" validate:"required"`
+        UserId int64 `form:"user_id" validate:"required,gte=0"`
+    }
+    FriendsListResp {
+        Status
+        UserList []User `json:"user_list,omitempty"`
+    }
+)
