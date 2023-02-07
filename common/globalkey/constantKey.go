@@ -35,7 +35,7 @@ const StaticFileServiceIP = "http://101.42.168.126:8888/"
 //const StaticFileServiceIP = "http://localhost:8888/"
 
 // 视频流数目
-const FeedVideoNum uint64 = 2
+const FeedVideoNum uint64 = 10
 
 // 发布评论
 const PublishComment int64 = 1
