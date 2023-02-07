@@ -96,7 +96,7 @@ type CommentOrDelCommentResp struct {
 }
 
 type CommentsListReq struct {
-	Token   string `form:"token""`
+	Token   string `form:"token，optional"`
 	VideoId int64  `form:"video_id" validate:"required,gte=0"`
 }
 

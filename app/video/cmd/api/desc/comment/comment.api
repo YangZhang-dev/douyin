@@ -36,7 +36,7 @@ type (
 type (
     // 获取视频评论操作请求体
     CommentsListReq {
-        Token string `form:"token""`
+        Token string `form:"token，optional"`
         VideoId int64 `form:"video_id" validate:"required,gte=0"`
     }
         // 获取视频评论操作返回体
