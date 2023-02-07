@@ -24,7 +24,7 @@ const LocalVideoPath = "static/video/"
 const OssCoverPath = "?x-oss-process=video/snapshot,t_1,m_fast"
 
 // 视频上传大小限制
-const MaxVideoSize int64 = 33554432
+const MaxVideoSize int64 = 52428800
 
 // 本地封面前缀
 const LocalCoverPath = "static/cover/"
