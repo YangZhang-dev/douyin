@@ -9,6 +9,7 @@ services:
       MYSQL_ROOT_PASSWORD: root # root密码(修改要同时修改data/mysql/init/init.sql中的密码)
     restart: on-failure
     volumes:
+      - ./data/mysql/data:/var/lib/mysql
       - ./data/mysql/conf:/etc/mysql/conf.d/
       - ./deploy/sql/init:/docker-entrypoint-initdb.d/
     command:
@@ -19,10 +20,11 @@ services:
 
   #Redis
   douyin-redis:
-    image: redis
+    image: redis:4.0.1
     command: redis-server --requirepass root # requirepass后为密码(可修改)
     volumes:
-      - ./data/redis:/data
+      - ./data/redis/data:/data
+      - /data/redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
     networks:
       - douyin-net
 

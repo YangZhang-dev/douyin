@@ -5,7 +5,6 @@ package model
 import (
 	"context"
 	"database/sql"
-	"douyin/app/video/model"
 	"fmt"
 	"strings"
 	"time"
@@ -40,9 +39,9 @@ type (
 	}
 
 	Chat struct {
-		Id         int64     `db:"id"`         // 娑堟伅id
-		UserId     int64     `db:"user_id"`    // 发送用户id
-		ToUserId   int64     `db:"to_user_id"` // 接收消息用户id
+		Id         int64     `db:"id"`           // 娑堟伅id
+		FromUserId int64     `db:"from_user_id"` // 发送用户id
+		ToUserId   int64     `db:"to_user_id"`   // 接收消息用户id
 		Content    string    `db:"content"`
 		CreateTime time.Time `db:"create_time"` // 鍒涘缓鏃堕棿
 		UpdateTime time.Time `db:"update_time"` // 更新时间
@@ -61,9 +60,9 @@ func (m *defaultChatModel) Insert(ctx context.Context, session sqlx.Session, dat
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?)", m.table, chatRowsExpectAutoSet)
 		if session != nil {
-			return session.ExecCtx(ctx, query, data.UserId, data.ToUserId, data.Content)
+			return session.ExecCtx(ctx, query, data.FromUserId, data.ToUserId, data.Content)
 		}
-		return conn.ExecCtx(ctx, query, data.UserId, data.ToUserId, data.Content)
+		return conn.ExecCtx(ctx, query, data.FromUserId, data.ToUserId, data.Content)
 	}, chatIdKey)
 }
 
@@ -78,7 +77,7 @@ func (m *defaultChatModel) FindOne(ctx context.Context, id int64) (*Chat, error)
 	case nil:
 		return &resp, nil
 	case sqlc.ErrNotFound:
-		return nil, model.ErrNotFound
+		return nil, ErrNotFound
 	default:
 		return nil, err
 	}
@@ -89,9 +88,9 @@ func (m *defaultChatModel) Update(ctx context.Context, session sqlx.Session, dat
 	return m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, chatRowsWithPlaceHolder)
 		if session != nil {
-			return session.ExecCtx(ctx, query, data.UserId, data.ToUserId, data.Content, data.Id)
+			return session.ExecCtx(ctx, query, data.FromUserId, data.ToUserId, data.Content, data.Id)
 		}
-		return conn.ExecCtx(ctx, query, data.UserId, data.ToUserId, data.Content, data.Id)
+		return conn.ExecCtx(ctx, query, data.FromUserId, data.ToUserId, data.Content, data.Id)
 	}, chatIdKey)
 }
 

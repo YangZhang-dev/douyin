@@ -1,7 +1,6 @@
 package user
 
 import (
-	"douyin/common/xerr"
 	"net/http"
 
 	"douyin/app/user/cmd/api/internal/logic/user"
@@ -16,12 +15,12 @@ func LoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.LoginReq
 		if err := httpx.Parse(r, &req); err != nil {
-			result.ParamErrorResult(r, w, xerr.NewErrMsg("参数错误"))
+			result.ParamErrorResult(r, w, err)
 			return
 		}
 
 		if err := validator.New().StructCtx(r.Context(), req); err != nil {
-			result.ParamErrorResult(r, w, xerr.NewErrMsg("参数错误"))
+			result.ParamErrorResult(r, w, err)
 			return
 		}
 

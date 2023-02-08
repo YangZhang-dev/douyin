@@ -12,14 +12,14 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `chat`;
 CREATE TABLE `chat`
 (
-    `id`          int          NOT NULL AUTO_INCREMENT COMMENT '娑堟伅id',
-    `user_id`     int          NOT NULL COMMENT '发送用户id',
-    `to_user_id`  int          NOT NULL COMMENT '接收消息用户id',
-    `content`     varchar(200) NOT NULL,
-    `create_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '鍒涘缓鏃堕棿',
-    `update_time` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `id`           int          NOT NULL AUTO_INCREMENT COMMENT '娑堟伅id',
+    `from_user_id` int          NOT NULL COMMENT '发送用户id',
+    `to_user_id`   int          NOT NULL COMMENT '接收消息用户id',
+    `content`      varchar(200) NOT NULL,
+    `create_time`  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '鍒涘缓鏃堕棿',
+    `update_time`  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
-    KEY `idx_chat` (`user_id`, `to_user_id`)
+    KEY `idx_chat` (`from_user_id`, `to_user_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 

@@ -121,12 +121,14 @@ message GetFriendsListResp{
 message Message{
   int64 id = 1;
   string content = 2;
-  string createTime = 3;
+  int64 ToUserId = 3;
+  int64 FromUserId = 4;
+  string createTime = 5;
 }
 
 // 发送消息请求体
 message SendMessageReq{
-  int64 userId = 1;
+  int64 fromUserId = 1;
   int64 toUserId = 2;
   string content = 3;
 }
@@ -135,7 +137,7 @@ message SendMessageResp{
 }
 // 获取历史消息请求体
 message GetHistoryMessageReq{
-  int64 userId = 1;
+  int64 fromUserId = 1;
   int64 toUserId = 2;
 }
 // 获取历史消息返回体

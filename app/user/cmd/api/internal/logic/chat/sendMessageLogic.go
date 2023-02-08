@@ -30,9 +30,9 @@ func NewSendMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SendM
 func (l *SendMessageLogic) SendMessage(req *types.SendMessageReq) (resp *types.SendMessageResp, err error) {
 	userId := ctxdata.GetUidFromCtx(l.ctx)
 	_, err = l.svcCtx.UserRpc.SendMessage(l.ctx, &pb.SendMessageReq{
-		UserId:   userId,
-		ToUserId: req.ToUserId,
-		Content:  req.Content,
+		FromUserId: userId,
+		ToUserId:   req.ToUserId,
+		Content:    req.Content,
 	})
 	if err != nil {
 		return nil, errors.Wrapf(err, "req: %+v", req)

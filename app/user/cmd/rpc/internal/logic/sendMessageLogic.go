@@ -30,23 +30,23 @@ func NewSendMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SendM
 
 func (l *SendMessageLogic) SendMessage(in *pb.SendMessageReq) (*pb.SendMessageResp, error) {
 
-	follow, err := l.svcCtx.FollowModel.FindOneByUserIdAndToUserId(l.ctx, in.UserId, in.ToUserId)
+	follow, err := l.svcCtx.FollowModel.FindOneByUserIdAndToUserId(l.ctx, in.FromUserId, in.ToUserId)
 	if follow == nil {
-		return nil, errors.Wrapf(ErrUserIsNotFriendError, "当前用户不是好友 userId:%+v,toUserId:%+v", in.UserId, in.ToUserId)
+		return nil, errors.Wrapf(ErrUserIsNotFriendError, "当前用户不是好友 userId:%+v,toUserId:%+v", in.FromUserId, in.ToUserId)
 	}
 	if err != nil && err != model.ErrNotFound {
-		return nil, errors.Wrapf(ErrDBError, "userid:%v,err:%v", in.UserId, err)
+		return nil, errors.Wrapf(ErrDBError, "userid:%v,err:%v", in.FromUserId, err)
 	}
 	if follow.IsFriend == globalkey.NotMutualAttention {
-		return nil, errors.Wrapf(ErrUserIsNotFriendError, "当前用户不是好友 userId:%+v,toUserId:%+v", in.UserId, in.ToUserId)
+		return nil, errors.Wrapf(ErrUserIsNotFriendError, "当前用户不是好友 userId:%+v,toUserId:%+v", in.FromUserId, in.ToUserId)
 	}
 	_, err = l.svcCtx.ChatModel.Insert(l.ctx, nil, &model.Chat{
-		UserId:   in.UserId,
-		ToUserId: in.ToUserId,
-		Content:  in.Content,
+		FromUserId: in.FromUserId,
+		ToUserId:   in.ToUserId,
+		Content:    in.Content,
 	})
 	if err != nil {
-		return nil, errors.Wrapf(ErrDBError, "userid:%v,err:%v", in.UserId, err)
+		return nil, errors.Wrapf(ErrDBError, "userid:%v,err:%v", in.FromUserId, err)
 	}
 
 	return &pb.SendMessageResp{}, nil

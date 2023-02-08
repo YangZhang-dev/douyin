@@ -30,8 +30,8 @@ func NewHistoryMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Hi
 func (l *HistoryMessageLogic) HistoryMessage(req *types.HistoryMessageReq) (resp *types.HistoryMessageResp, err error) {
 	userId := ctxdata.GetUidFromCtx(l.ctx)
 	getHistoryMessageResp, err := l.svcCtx.UserRpc.GetHistoryMessage(l.ctx, &pb.GetHistoryMessageReq{
-		UserId:   userId,
-		ToUserId: req.ToUserId,
+		FromUserId: userId,
+		ToUserId:   req.ToUserId,
 	})
 	if err != nil {
 		return nil, errors.Wrapf(err, "req: %+v", req)
@@ -40,7 +40,6 @@ func (l *HistoryMessageLogic) HistoryMessage(req *types.HistoryMessageReq) (resp
 	var res []types.Message
 	messages := getHistoryMessageResp.MessageList
 	_ = copier.Copy(&res, messages)
-
 	return &types.HistoryMessageResp{
 		Status: types.Status{
 			StatusCode: xerr.OK,

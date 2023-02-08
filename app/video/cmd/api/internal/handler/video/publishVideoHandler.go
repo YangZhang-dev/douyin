@@ -14,7 +14,6 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-var ErrUploadFileTypeError = xerr.NewErrCode(xerr.UPLOAD_FILE_TYPE_ERROR)
 var ErrUploadFileOverSize = xerr.NewErrCode(xerr.UPLOAD_FILE_LIMIT_EXCEEDED)
 var ErrUploadFileNotFound = xerr.NewErrCode(xerr.UPLOAD_FILE_NOT_FOUND_ERROR)
 
@@ -22,11 +21,11 @@ func PublishVideoHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.PublishReq
 		if err := httpx.Parse(r, &req); err != nil {
-			result.ParamErrorResult(r, w, xerr.NewErrMsg("参数错误"))
+			result.ParamErrorResult(r, w, err)
 			return
 		}
 		if err := validator.New().StructCtx(r.Context(), req); err != nil {
-			result.ParamErrorResult(r, w, xerr.NewErrMsg("参数错误"))
+			result.ParamErrorResult(r, w, err)
 			return
 		}
 		if r.MultipartForm.File["data"] == nil {

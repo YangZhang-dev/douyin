@@ -30,21 +30,21 @@ func NewGetHistoryMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 // 获取历史消息
 func (l *GetHistoryMessageLogic) GetHistoryMessage(in *pb.GetHistoryMessageReq) (*pb.GetHistoryMessageResp, error) {
-	follow, err := l.svcCtx.FollowModel.FindOneByUserIdAndToUserId(l.ctx, in.UserId, in.ToUserId)
+	follow, err := l.svcCtx.FollowModel.FindOneByUserIdAndToUserId(l.ctx, in.FromUserId, in.ToUserId)
 	if follow == nil {
-		return nil, errors.Wrapf(ErrUserIsNotFriendError, "当前用户不是好友 userId:%+v,toUserId:%+v", in.UserId, in.ToUserId)
+		return nil, errors.Wrapf(ErrUserIsNotFriendError, "当前用户不是好友 userId:%+v,toUserId:%+v", in.FromUserId, in.ToUserId)
 	}
 	if err != nil && err != model.ErrNotFound {
-		return nil, errors.Wrapf(ErrDBError, "userid:%v,err:%v", in.UserId, err)
+		return nil, errors.Wrapf(ErrDBError, "userid:%v,err:%v", in.FromUserId, err)
 	}
 	if follow.IsFriend == globalkey.NotMutualAttention {
-		return nil, errors.Wrapf(ErrUserIsNotFriendError, "当前用户不是好友 userId:%+v,toUserId:%+v", in.UserId, in.ToUserId)
+		return nil, errors.Wrapf(ErrUserIsNotFriendError, "当前用户不是好友 userId:%+v,toUserId:%+v", in.FromUserId, in.ToUserId)
 	}
-	var query = l.svcCtx.ChatModel.RowBuilder().Where(squirrel.Eq{"user_id": in.UserId}).Where(squirrel.Eq{"to_user_id": in.ToUserId})
+	var query = l.svcCtx.ChatModel.RowBuilder().Where(squirrel.Or{squirrel.Eq{"from_user_id": in.FromUserId, "to_user_id": in.ToUserId}, squirrel.Eq{"to_user_id": in.FromUserId, "from_user_id": in.ToUserId}})
 	// TODO 加缓存
 	chats, err := l.svcCtx.ChatModel.FindAll(l.ctx, query, "create_time DESC")
 	if err != nil && err != model.ErrNotFound {
-		return nil, errors.Wrapf(ErrDBError, "userid:%v,err:%v", in.UserId, err)
+		return nil, errors.Wrapf(ErrDBError, "userid:%v,err:%v", in.FromUserId, err)
 	}
 	var res []*pb.Message
 
