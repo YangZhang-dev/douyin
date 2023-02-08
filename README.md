@@ -36,7 +36,7 @@ douyin是基于`go-zero`框架的一个极简版抖音的后端接口，为极�
 
 ## 接口文档
 
-参考官方文档：[接口文档]([赞操作 - 极简版抖音 (apifox.cn)](https://www.apifox.cn/apidoc/shared-09d88f32-0b6c-4157-9d07-a36d32d7a75c/api-50707526))
+参考官方文档：[极简版抖音 (apifox.cn)](https://www.apifox.cn/apidoc/shared-09d88f32-0b6c-4157-9d07-a36d32d7a75c/api-50707526)
 
 ## 数据库设计
 
@@ -74,7 +74,7 @@ douyin是基于`go-zero`框架的一个极简版抖音的后端接口，为极�
 
 ## 调用关系
 
-![调用关系](doc/relation.png)
+![调用关系](./doc/relation.png)
 
 不同的请求通过nginx反向代理到不同的api服务中，api通过直连的方式连接rpc，rpc同理。
 
