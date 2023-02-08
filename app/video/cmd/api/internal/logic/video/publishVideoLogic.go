@@ -5,7 +5,6 @@ import (
 	filepb "douyin/app/file/cmd/rpc/pb"
 	videopb "douyin/app/video/cmd/rpc/pb"
 	"douyin/common/ctxdata"
-	"douyin/common/tool"
 	"douyin/common/xerr"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
@@ -48,10 +47,6 @@ func (l *PublishVideoLogic) PublishVideo(req *types.PublishReq) (resp *types.Pub
 	if err != nil {
 		return nil, errors.Wrapf(ErrUploadFileError, "读取文件错误 err:%+v", err)
 	}
-	bytes, err = tool.GZipBytes(bytes)
-	if err != nil {
-		return nil, errors.Wrapf(ErrUploadFileError, "读取文件错误 err:%+v", err)
-	}
 
 	fileName := uuid.New().String() + "-" + strconv.FormatInt(time.Now().Unix(), 10) + "-" + strconv.FormatInt(userId, 10) + ".mp4"
 
@@ -71,7 +66,7 @@ func (l *PublishVideoLogic) PublishVideo(req *types.PublishReq) (resp *types.Pub
 			},
 		}, nil
 	}
-	logx.Error(err)
+	logx.Severe(err)
 	uploadVideoByLocalResp, err := l.svcCtx.FileRpc.UploadVideoByLocal(l.ctx, &filepb.UploadVideoByLocalReq{
 		VideoName: fileName,
 		Data:      bytes,
@@ -88,7 +83,7 @@ func (l *PublishVideoLogic) PublishVideo(req *types.PublishReq) (resp *types.Pub
 			},
 		}, nil
 	}
-	logx.Error(err)
+	logx.Severe(err)
 	return nil, ErrUploadFileError
 }
 

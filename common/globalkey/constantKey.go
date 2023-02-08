@@ -30,9 +30,9 @@ const MaxVideoSize int64 = 52428800
 const LocalCoverPath = "static/cover/"
 
 // 静态文件服务ip
-const StaticFileServiceIP = "http://101.42.168.126:8888/"
+const StaticFileServiceIP = "http://server-ip:8888/"
 
-//const StaticFileServiceIP = "http://localhost:8888/"
+//const StaticFileServiceIP = "http://192.168.1.27:8888/"
 
 // 视频流数目
 const FeedVideoNum uint64 = 10

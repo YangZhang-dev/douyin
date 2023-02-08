@@ -5,6 +5,8 @@ Mode: pro
 TimeOut: 10000 # 10s
 MaxBytes: 33554432 # 32M
 
+Timeout: 10000 # 10s
+
 #Log
 Log:
   ServiceName: videoApi
@@ -16,6 +18,7 @@ Log:
 FileRpcConf:
   Endpoints:
     - file-rpc:9092
+  Timeout: 10000
 
 VideoRpcConf:
   Endpoints:

@@ -6,7 +6,6 @@ import (
 	"douyin/app/file/cmd/rpc/internal/svc"
 	"douyin/app/file/cmd/rpc/pb"
 	"douyin/common/globalkey"
-	"douyin/common/tool"
 	"fmt"
 	"github.com/disintegration/imaging"
 	"github.com/pkg/errors"
@@ -33,11 +32,7 @@ func NewUploadVideoByLocalLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 // UploadVideoByLocal 上传视频到本地
 func (l *UploadVideoByLocalLogic) UploadVideoByLocal(in *pb.UploadVideoByLocalReq) (*pb.UploadVideoByLocalResp, error) {
 	videoPath := globalkey.LocalVideoPath + in.VideoName
-	data, err := tool.UGZipBytes(in.Data)
-	if err != nil {
-		return nil, errors.Wrapf(ErrUploadFileError, "读取文件错误 err:%+v", err)
-	}
-	err = os.WriteFile(videoPath, data, 0666)
+	err := os.WriteFile(videoPath, in.Data, 0666)
 	if err != nil {
 		return nil, errors.Wrapf(ErrCommonError, "local 上传错误 err:%+v", err)
 	}

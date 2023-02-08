@@ -8,7 +8,6 @@ import (
 	"douyin/common/interceptor/rpcserver"
 	"flag"
 	"fmt"
-
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -27,7 +26,7 @@ func main() {
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
 		pb.RegisterFileRpcServer(grpcServer, server.NewFileRpcServer(ctx))
-
+		grpc.MaxRecvMsgSize(50 << 20)
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
 		}
@@ -35,7 +34,6 @@ func main() {
 
 	//rpc log
 	s.AddUnaryInterceptors(rpcserver.LoggerInterceptor)
-	s.AddOptions(grpc.MaxRecvMsgSize(32 << 20))
 	defer s.Stop()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
