@@ -8,8 +8,8 @@ require (
 	github.com/disintegration/imaging v1.6.2
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/golang-jwt/jwt/v4 v4.4.3
+	github.com/google/uuid v1.3.0
 	github.com/jinzhu/copier v0.3.5
-	github.com/klauspost/compress v1.13.6
 	github.com/pkg/errors v0.9.1
 	github.com/u2takey/ffmpeg-go v0.4.1
 	github.com/zeromicro/go-zero v1.4.4
@@ -41,7 +41,6 @@ require (
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/pprof v0.0.0-20211214055906-6f57359322fd // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/gnostic v0.5.5 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
