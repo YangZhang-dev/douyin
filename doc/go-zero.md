@@ -206,4 +206,3 @@ UserRpc:               userrpc.NewUserRpc(zrpc.MustNewClient(c.UserRpcConf)),
 }
 ```
 
-sudo du -sh ./* --exclude proc
